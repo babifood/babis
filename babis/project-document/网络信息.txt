@@ -1,0 +1,11 @@
+
+地址：vpn.babifood.com
+VPN登陆账号/密码为：vpnoa/OA_zhiyuan123
+
+管理员帐号密码：zy-admin Babi#@!2016
+
+测试环境
+10.1.1.4
+oaprd
+用户名：V3XUSER
+密码:BabiPrd2016

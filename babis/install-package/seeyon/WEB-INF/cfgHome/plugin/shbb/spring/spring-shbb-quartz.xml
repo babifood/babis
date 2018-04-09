@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd"
+	default-lazy-init="true">
+	<description>配置客开相关定时器</description>
+	
+	    <bean name="shbbTask" class="com.seeyon.apps.shbb.task.SHBBTask">
+	         <property name="shbbSapManager" ref="shbbSapManager"/>
+	    </bean>
+	
+		<bean id="shbbJob1"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="shbbTask" />
+		<property name="targetMethod" value="excute1" />
+		<!-- 同一任务在前一次执行未完成而Trigger时间又到时是否并发开始新的执行, 默认为true. -->
+		<property name="concurrent" value="false" />
+	</bean>
+	
+		<bean id="shbbCronTrigger1"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="shbbJob1" />
+		<!-- 每1分钟执行一次执行 -->
+		<property name="cronExpression" value="0 0/5 * * * ?" />
+	</bean>
+	<!-- Quartz本地Scheduler -->
+	<bean id="schedulerFactory_shbb"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<!-- Triggers集成 -->
+		<property name="triggers">
+			<list>
+				<ref bean="shbbCronTrigger1" />-->
+			</list>
+		</property>
+	</bean>
+</beans>
+

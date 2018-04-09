@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans default-autowire="byName">
+	<bean id="shbbBaseController" class="com.seeyon.apps.shbb.controller.SHBBBaseController" abstract="true">
+		<property name="formManager" ref="formManager" />
+		<property name="jdbcTemplate" ref="shbbJdbcTemplate" />
+		<property name="formCacheManager" ref="formCacheManager" />
+		<property name="ibatisQueryDao" ref="shbbIbatisQueryDao" />
+		<property name="templateManager" ref="templateManager" />
+	</bean>
+	<bean name="/shbbJsButton.do" class="com.seeyon.apps.shbb.controller.JsButtonController" parent="shbbBaseController">
+		<!--content扩展单据名称与jsp视图对应 -->
+		<property name="shbbJslink">
+			<map>
+				<!--
+				<entry key="SAP基础数据新增" value="sapAddBaseData"></entry>
+				
+				<entry key="SAP基础数据修改" value="sapModityBaseData"></entry>
+				
+				<entry key="SAP工厂数据新增" value="sapAddFactoryData"></entry>
+				-->
+			</map>
+		</property>
+	</bean>
+	<!-- sap基础信息新增校验
+	<bean name="/checkSapBaseDataController.do" class="com.seeyon.apps.kk.controller.SapBaseDataController" parent="kkBaseController">
+	</bean>
+	 -->
+	<!-- sap工厂信息新增校验
+	<bean name="/checkSapFactoryDataController.do" class="com.seeyon.apps.kk.controller.SapFactoryDataController" parent="kkBaseController">
+	</bean>
+	 -->
+   <bean name="/shbbSapController.do" class="com.seeyon.apps.shbb.controller.SHBBSapController" parent="shbbBaseController">
+	 <property name="shbbSapManager" ref="shbbSapManager"></property>
+	 <property name="hkzfManager" ref="hkzfManager"></property>
+	 <property name="fyManager" ref="fyManager"></property>
+	 <property name="yfkManager" ref="yfkManager"></property>
+	</bean>
+
+</beans>

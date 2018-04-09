@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="byName"> 
+
+	<bean id="shbbBaseListener" class="com.seeyon.apps.shbb.listener.BaseListener" abstract="true">		 
+		<property name="jdbcTemplate" ref="shbbJdbcTemplate"/>
+		<property name="colManager" ref="colManager" />
+		<property name="enumManagerNew" ref="enumManagerNew" />
+		<property name="templateManager" ref="templateManager"/>
+		<property name="ibatisQueryDao" ref="shbbIbatisQueryDao" />
+		<property name="templateCode" ref="templateCode" />
+		
+	</bean>
+	
+	
+	<!-- 考勤记录删除流程：根据模版编号删除某一个时间段内考勤记录 -->
+	<!--
+	<bean id="formDataListtener"  class="com.seeyon.apps.kk.listener.FormDataListtener" parent="kkBaseListener" >
+		<property name="templateCode" value="formTemp0001,formTemp0002,formTemp0003,formTemp0004,formTemp0005,formTemp0006,formTemp0007,formTemp0008,formTemp0009,formTemp0010"/>
+		<property name="kkAttendanceManager" ref="kkAttendanceManager" /> 
+	</bean> 
+	-->
+</beans>

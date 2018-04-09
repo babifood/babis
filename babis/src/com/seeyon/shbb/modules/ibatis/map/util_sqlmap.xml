@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap>
+     <!-- insertCtpContentAll插入数据 --> 
+    <insert id="ctpContentAll.insert"  parameterClass="map" >
+        INSERT INTO 
+        		CTP_CONTENT_ALL 
+        select 
+        		#id#,#createId#,SYSDATE,MODIFY_ID,SYSDATE,MODULE_TYPE,#moduleId#,#moduleTemplateId#,
+				CONTENT_TYPE,#content#,#contentDataId#,CONTENT_TEMPLATE_ID,TITLE,#sort#
+		from 
+			CTP_CONTENT_ALL
+		where 
+			ID=#moduleTemplateId# 
+    </insert> 
+</sqlMap>

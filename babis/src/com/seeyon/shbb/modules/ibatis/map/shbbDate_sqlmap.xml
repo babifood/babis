@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<!--查询凭证档案底表信息-->
+	<select id="getSapData.select" resultClass="mapBean" parameterClass="String">
+		SELECT 
+		f.id as id,
+		f.field0001 as lcbh,
+		f.field0009 as gsdaima,
+		f.field0010 as gsmingcheng,
+		f.field0002 as ygbianhao,
+		TO_CHAR(f.field0003,'yyyymmdd') as cjriqi,
+		f.field0004 as bmdaima,
+		f.field0005 as huobima,
+		f.field0006 as pzhao,
+		f.field0007 as khdaima,
+		c.showvalue as pzleixing,
+		f.field0008 as shuoming,
+		f.field0032 as hanghao1,
+		ct1.showvalue as yuanyinma1,
+		f.field0017 as jzdaima1,
+		f.field0016 as zzbiaoshi1,
+		f.field0018 as kjkmdaima1,
+		f.field0037 as bwbmoney1,
+		f.field0021 as hanghao2,
+		ct2.showvalue as yuanyinma2,
+		f.field0022 as jzdaima2,
+		f.field0020 as zzbiaoshi2,
+		f.field0023 as kjkmdaima2,
+		f.field0038 as bwbmoney2,
+		f.field0024 as hanghao3,
+		ct3.showvalue as yuanyinma3,
+		f.field0025 as jzdaima3,
+		f.field0035 as zzbiaoshi3,
+		f.field0026 as kjkmdaima3,
+		f.field0027 as bwbmoney3,
+		f.field0028 as hanghao4,
+		ct4.showvalue as yuanyinma4,
+		f.field0029 as jzdaima4,
+		f.field0036 as zzbiaoshi4,
+		f.field0030 as kjkmdaima4,
+		f.field0031 as bwbmoney4,
+		f.field0045 as hanghao5,
+		ct5.showvalue as yuanyinma5,
+		f.field0047 as jzdaima5,
+		f.field0048 as zzbiaoshi5,
+		f.field0049 as kjkmdaima5,
+		f.field0050 as bwbmoney5,
+		f.field0051 as hanghao6,
+		ct6.showvalue as yuanyinma6,
+		f.field0053 as jzdaima6,
+		f.field0054 as zzbiaoshi6,
+		f.field0055 as kjkmdaima6,
+		f.field0056 as bwbmoney6,
+		f.field0057 as hanghao7,
+		ct7.showvalue as yuanyinma7,
+		f.field0059 as jzdaima7,
+		f.field0060 as zzbiaoshi7,
+		f.field0061 as kjkmdaima7,
+		f.field0062 as bwbmoney7,
+		f.field0063 as hanghao8,
+		ct8.showvalue as yuanyinma8,
+		f.field0065 as jzdaima8,
+		f.field0066 as zzbiaoshi8,
+		f.field0067 as kjkmdaima8,
+		f.field0068 as bwbmoney8,
+		yh.code as yonghuming,
+		gz.code as gzyonghu,
+		TO_CHAR(field0014,'yyyymmdd') as pzdate,
+		TO_CHAR(field0040,'yyyymmdd') as gzdate,
+		f.field0013 as fujian,
+		f.field0041 as bdlaiyuan,
+		f.field0075 as lrzhongxin,
+        f.field0076 as cbzhongxin,
+        f.field0077 as zcbainhao,
+		f.field0043 as state,
+		f.field0042 as message,
+		f.field0080 as jinsuifapiao,
+		f.field0081 as taitoutext,
+		f.field0082 as hangtext,
+		yg.code as yuangongno
+		from FORMMAIN_2388 f
+		LEFT OUTER JOIN  ctp_enum_item c ON f.field0039 = c.id 
+		LEFT OUTER JOIN  ctp_enum_item ct1 ON f.field0015 = ct1.id
+		LEFT OUTER JOIN  ctp_enum_item ct2 ON f.field0019 = ct2.id
+		LEFT OUTER JOIN  ctp_enum_item ct3 ON f.field0033 = ct3.id
+		LEFT OUTER JOIN  ctp_enum_item ct4 ON f.field0034 = ct4.id
+		LEFT OUTER JOIN  ctp_enum_item ct5 ON f.field0046 = ct5.id
+		LEFT OUTER JOIN  ctp_enum_item ct6 ON f.field0052 = ct6.id
+		LEFT OUTER JOIN  ctp_enum_item ct7 ON f.field0058 = ct7.id
+		LEFT OUTER JOIN  ctp_enum_item ct8 ON f.field0064 = ct8.id 
+		LEFT OUTER JOIN  ORG_MEMBER yh on f.field0011 = yh.id
+		LEFT OUTER JOIN  ORG_MEMBER gz on f.field0012 = gz.id
+		LEFT OUTER JOIN  ORG_MEMBER yg on f.field0074 = yg.id
+		WHERE f.id=#id#
+	</select>
+	<!--更新凭证档案底表-->
+	<update id="sapdate_update" parameterClass="map">
+		    UPDATE FORMMAIN_2388 SET 
+              field0006=#BELNR#,          <!--凭证号-->
+              field0043=#state#,          <!--对接状态-->
+              field0042=#MESSAGE#         <!--对接信息--> 
+              where id=#id#	
+	</update>
+	<!--查询出数据状态为'0'或者为'E'的id-->
+	<select id="getdateId" resultClass="mapBean">		
+       SELECT id from FORMMAIN_2388
+        where field0043='0'or field0043='E' 
+         ORDER BY START_DATE
+	</select>
+	<!--查询重复表-->
+	<select id="sapdate_select" resultClass="mapBean" parameterClass="String">
+		SELECT		
+		m.FIELD0069 as xuhao,
+		m.FIELD0070 as jizhang,
+		m.FIELD0071 as kemu,
+		m.FIELD0072 as jinge,
+		m.FIELD0083 as wenben,
+		m.FIELD0084 as daitan
+		from FORMSON_2389 m  
+		WHERE FORMMAIN_ID=#id#		
+	</select>
+	<!--查询表单名称-->
+	<select id="bdname_select" resultClass="mapBean" parameterClass="String">
+	  SELECT 
+	  field0041 as bdname,
+	  field0006 as pznumber
+	  FROM FORMMAIN_2388 where id=#id#	
+	</select>
+</sqlMap>	  

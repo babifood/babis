@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="byName">
+	<bean id="shbbBaseManager" class="com.seeyon.apps.shbb.manager.BaseManager"
+		abstract="true">
+		<property name="formManager" ref="formManager" />
+		<property name="jdbcTemplate" ref="shbbJdbcTemplate" />
+		<property name="formCacheManager" ref="formCacheManager" />
+		<property name="ibatisQueryDao" ref="shbbIbatisQueryDao" />
+	</bean>
+	<bean id="shbbFlowManager" class="com.seeyon.apps.shbb.manager.FreemarkFlowManager" parent="shbbBaseManager">
+		<property name="freeMarkerConfigurer" ref="shbbfreemarkerConfig" />
+		<property name="flowFactoryImpl" ref="flowFactory" />
+	</bean>
+	
+	<!--
+	<bean id="kkAttendanceManager" class="com.seeyon.apps.kk.manager.KKAttendanceManager" parent="kkBaseManager">
+		<property name="userMessageManager" ref="userMessageManager" />
+	</bean>
+	-->
+
+    <bean id="shbbSapManager" class="com.seeyon.apps.shbb.manager.SHBBSapManager"  parent="shbbBaseManager">
+    		<property name="hkzfManager" ref="hkzfManager"></property>
+	 		<property name="fyManager" ref="fyManager"></property>
+	 		<property name="yfkManager" ref="yfkManager"></property>
+    </bean>
+    
+    <bean id = "hkzfManager" class = "com.seeyon.apps.shbb.manager.HKZFManager" parent="shbbBaseManager">
+    </bean>
+    <bean id = "fyManager" class = "com.seeyon.apps.shbb.manager.FYManager" parent="shbbBaseManager">
+    </bean>
+    <bean id = "yfkManager" class = "com.seeyon.apps.shbb.manager.YFKManager" parent="shbbBaseManager">
+    </bean>
+</beans>

@@ -1,0 +1,20 @@
+用户名：OASERVICE     
+密码：oaservice
+
+开发环境：
+SAP-OA接口DEV-WSDL-费用报销:
+   http://10.0.3.41:8000/sap/bc/srt/wsdl/flv_10002A111AD1/bndg_url/sap/bc/srt/rfc/sap/zws_fico_oa_01/300/zws_fico_oa_interface/zws_fico_oa_interface?sap-client=300
+
+SAP-OA接口DEV-WSDL-预付款确认：
+   http://10.0.3.41:8000/sap/bc/srt/wsdl/flv_10002A111AD1/srvc_url/sap/bc/srt/rfc/sap/zws_fico_oa_02/300/zws_fico_oa_interface_02/zws_fico_oa_interface_02?sap-client=300
+
+
+SAP-OA接口DEV-WSDL-付款确认：
+   http://10.0.3.41:8000/sap/bc/srt/wsdl/flv_10002A111AD1/srvc_url/sap/bc/srt/rfc/sap/zws_fico_oa_03/300/zws_fico_oa_interface_03/zws_fico_oa_interface_03?sap-client=300
+   
+  测试环境：
+ 费用报销等：     http://10.0.3.42:8000/sap/bc/srt/wsdl/flv_10002A111AD1/srvc_url/sap/bc/srt/rfc/sap/zws_fico_oa_01/710/zws_fico_oa_interface/zws_fico_oa_interface?sap-client=710
+
+预付款请求确认： http://10.0.3.42:8000/sap/bc/srt/wsdl/flv_10002A111AD1/srvc_url/sap/bc/srt/rfc/sap/zws_fico_oa_02/710/zws_fico_oa_interface_02/zws_fico_oa_interface_02?sap-client=710
+
+付款请求确认：   http://10.0.3.42:8000/sap/bc/srt/wsdl/flv_10002A111AD1/srvc_url/sap/bc/srt/rfc/sap/zws_fico_oa_03/710/zws_fico_oa_interface_03/zws_fico_oa_interface_03?sap-client=710

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap>
+	
+	<!--获取所有考勤信息 -->
+    <select id="queryAllAttendanceData.select" resultClass="mapBean" parameterClass="map">
+    	SELECT
+			
+			CLB.ID,
+			ORM.NAME,
+			ORM.CODE,
+			CLB.DPT_ID,
+			ORM.ORG_ACCOUNT_ID,
+			CLB.CREATE_DATE,
+			CLB.LBS_ADDR,
+			CLB.LBS_LONGITUDE,
+			CLB.LBS_LATITUDE,
+			CLB.LBS_COMMENT,
+			'',
+			'',
+			'',
+			'',
+			'',
+			CLB.OWNER_ID
+		FROM CMP_LBS_BASE CLB
+		LEFT OUTER JOIN FORMMAIN_1559 F ON F.field0012 = CLB.ID
+		LEFT OUTER JOIN ORG_MEMBER ORM ON ORM.ID = CLB.OWNER_ID
+		WHERE F.ID IS NULL
+    </select>
+	
+	<!-- 将系统考勤表中的增量数据新增到 考勤事件表中 -->
+    <insert id="insertAllAttendanceData.insert" parameterClass="map" >
+    	INSERT INTO FORMMAIN_1559(
+		id,state,start_member_id,start_date,approve_member_id,
+		approve_date,finishedflag,ratifyflag,ratify_member_id,ratify_date,
+		FIELD0012,FIELD0001,FIELD0002,FIELD0003,FIELD0004,
+		FIELD0005,FIELD0006,FIELD0007,FIELD0008,FIELD0009,
+		FIELD0010,FIELD0011,FIELD0013,FIELD0014,FIELD0016
+		)
+		VALUES
+		(
+		#id#,1,#start_member_id#,SYSDATE,#approve_member_id#,
+		SYSDATE,0,0,#ratify_member_id#,SYSDATE, 
+		#field0012#,#field0001#,#field0002#,#field0003#,#field0004#,
+		to_date(#field0005# , 'YYYY-MM-DD HH24:MI:SS'),#field0006#,#field0007#,#field0008#,#field0009#,
+		#field0010#,#field0011#,#field0013#,#field0014#,#field0016#
+		)
+    </insert>
+	
+	<!--获取所有考勤事件表中的信息 -->
+    <select id="queryAllFormmainAttendanceData.select" resultClass="mapBean" parameterClass="map">
+    	SELECT * FROM FORMMAIN_1559 WHERE FIELD0015 IS NULL
+    </select>
+    
+	<!--根据人员姓名和员工工号获取有权限的门店(门店为启用状态)列表 -->
+    <select id="queryAllFormmainAccessData.select" resultClass="mapBean" parameterClass="map">
+    	SELECT * FROM formmain_1558 F 
+		LEFT OUTER JOIN CTP_ENUM_ITEM ENUM ON ENUM.ID = F.field0006
+		WHERE F.field0004 = #userName# AND F.field0005 = #userCode# AND ENUM.SHOWVALUE = '启用'
+    </select>
+    
+    
+	<!--根据员工工号获取有效考勤记录 -->
+    <select id="queryAllAccessAttendanceData.select" resultClass="mapBean" parameterClass="map">
+    	<!--
+    	select  floor(2000 * Asin(Sqrt(
+			power(
+			Sin((F52.field0002-#jingdu#)*3.1415926/180 / 2)
+			, 2) +
+		Cos(F52.field0002*3.1415926/180) * Cos(#jingdu#*3.1415926/180) * power(Sin((F52.field0003-#weidu#)*3.1415926/180 / 2), 2)))*6378.137)
+		as d
+		,F52.field0001 AS 就近有效地址,F52.field0007 AS 门店代码 ,F52.FIELD0008 AS 门店类型,F52.*,F.* from FORMMAIN_1557 F52
+		LEFT OUTER JOIN formmain_1558 F ON F.field0003 = F52.field0007 AND F.field0001 = F52.field0001
+		LEFT OUTER JOIN CTP_ENUM_ITEM ENUM ON ENUM.ID = F.field0006
+		WHERE  F.field0005 = #userCode# AND ENUM.SHOWVALUE = '启用' 
+		AND 
+		F52.field0004 >= (
+		floor(2000 * Asin(Sqrt(
+			power(
+			Sin((F52.field0002-#jingdu#)*3.1415926/180 / 2)
+			, 2) +
+		Cos(F52.field0002*3.1415926/180) * Cos(#jingdu#*3.1415926/180) * power(Sin((F52.field0003-#weidu#)*3.1415926/180 / 2), 2)))*6378.137)
+		)
+		
+		order by d
+		-->
+		
+		select
+		(
+		sdo_geom.sdo_distance(mdsys.sdo_geometry(2001,8307,mdsys.sdo_point_type(F52.field0002,F52.field0003,0),null,null),mdsys.sdo_geometry(2001,8307,mdsys.sdo_point_type(#jingdu#,#weidu#,0),null,null),0.005)
+		)
+		as d
+		,F52.field0001 AS 就近有效地址,F52.field0007 AS 门店代码 ,F52.FIELD0008 AS 门店类型,F52.*,F.* from FORMMAIN_1557 F52
+		LEFT OUTER JOIN formmain_1558 F ON F.field0003 = F52.field0007 AND F.field0001 = F52.field0001
+		LEFT OUTER JOIN CTP_ENUM_ITEM ENUM ON ENUM.ID = F.field0006
+		WHERE  F.field0005 = #userCode# AND ENUM.SHOWVALUE = '启用' 
+		AND 
+		F52.field0004 >= (
+		sdo_geom.sdo_distance(mdsys.sdo_geometry(2001,8307,mdsys.sdo_point_type(F52.field0002,F52.field0003,0),null,null),mdsys.sdo_geometry(2001,8307,mdsys.sdo_point_type(#jingdu#,#weidu#,0),null,null),0.005)
+		)
+		
+		order by d
+    </select>
+    
+    <!-- 更新userId -->
+    <update id="kkUpdateUserId.update">
+    	UPDATE formmain_1559 SET formmain_1559.field0016 = (SELECT ORG_MEMBER.ID  FROM ORG_MEMBER WHERE ORG_MEMBER.CODE =formmain_1559.FIELD0002) WHERE formmain_1559.field0016 IS NULL
+    </update>
+    
+    
+    <!-- 更新用户考勤时间表-标记是否有效 -->
+    <update id="updateAttaendanceDataByFormmainId.update">
+    	
+    	 UPDATE FORMMAIN_1559 SET FIELD0009 = #field0009#,FIELD0010 = #field0010#,FIELD0013 = #field0013#, FIELD0014 = #field0014#, FIELD0015 = #field0015# WHERE ID = #formmainId#
+    </update>
+    
+    
+    
+    <!--获取所有"启用"状态下的店铺信息 -->
+    <select id="queryAllShops.select" resultClass="mapBean" parameterClass="map">
+    	SELECT F.* FROM FORMMAIN_1557 F
+		LEFT OUTER JOIN CTP_ENUM_ITEM CEI ON F.FIELD0005 = CEI.ID
+		WHERE CEI.SHOWVALUE = '启用'
+    </select>
+    
+    
+    <!--获取所有"启用"状态下的店铺信息 -->
+    <select id="queryFormmainInfoByFormmainId.select" resultClass="mapBean" parameterClass="map">
+    	<!--测试系统 -->
+    	<!-- SELECT F.FIELD0001 AS START_DATE,F.FIELD0002 AS END_DATE,F.FIELD0003 AS ACCOUNTID,F.FIELD0004 AS DEPTID,F.FIELD0005 AS MEMBERID FROM FORMMAIN_1565 F WHERE F.ID = #formmainId# -->
+    	SELECT F.FIELD0001 AS START_DATE,F.FIELD0002 AS END_DATE,F.FIELD0003 AS ACCOUNTID,F.FIELD0004 AS DEPTID,F.FIELD0005 AS MEMBERID FROM FORMMAIN_1568 F WHERE F.ID = #formmainId#
+    </select>
+    
+    
+    
+    
+    
+    
+    <delete id="deleteAttendanceData.delete" >
+    	delete from formmain_1559 
+    	<dynamic prepend="where">
+    		<isNotEmpty prepend="and" property="memberId">
+    			formmain_1559.FIELD0016 in
+	    		<iterate  property="memberId" open="(" close=")" conjunction=",">  
+			    	#memberId[]# 
+			    </iterate>
+    		</isNotEmpty>
+    		<isNotEmpty prepend="and" property="startDate">
+				<![CDATA[ field0005 >= to_date(#startDate# , 'YYYY-MM-DD HH24:MI:SS') ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="endDate">
+				<![CDATA[ field0005 <= to_date(#endDate# , 'YYYY-MM-DD HH24:MI:SS') ]]>
+			</isNotEmpty>
+	    	<isNotEmpty prepend="and" property="accountId">
+				field0004 = #accountId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="deptId">
+				field0003 = #deptId#
+			</isNotEmpty>
+    	</dynamic>
+    </delete>
+
+	<!--
+	<delete id="deleteAttendanceData.delete" >
+    	delete from formmain_1559 WHERE ID IN (
+    		SELECT formmain_1559.ID from formmain_1559, ORG_MEMBER WHERE formmain_1559.FIELD0002 = ORG_MEMBER.CODE
+			 
+			   <isNotEmpty prepend="and" property="memberId">
+				ORG_MEMBER.ID IN
+    			<iterate  property="memberId" open="(" close=")" conjunction=",">  
+			             #memberId[]# 
+			    </iterate>
+			   </isNotEmpty> 
+    			
+	    		<isNotEmpty prepend="and" property="startDate">
+					<![CDATA[ field0005 >= to_date(#startDate# , 'YYYY-MM-DD HH24:MI:SS') ]]>
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="endDate">
+					<![CDATA[ field0005 <= to_date(#endDate# , 'YYYY-MM-DD HH24:MI:SS') ]]>
+				</isNotEmpty>
+		    	<isNotEmpty prepend="and" property="accountId">
+					field0004 = #accountId#
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="deptId">
+					field0003 = #deptId#
+				</isNotEmpty>
+				)
+    </delete>
+	-->
+    
+    <!-- 修改流程状态 -->
+    <update id="updateFormmainInfoByFormmainId.update">
+    	<!-- 测试系统  -->
+    	<!-- UPDATE FORMMAIN_1565 SET field0007 = #msg# WHERE ID = #formmainId# -->
+    	UPDATE FORMMAIN_1568 SET field0007 = #msg# WHERE ID = #formmainId#
+    </update>
+    
+</sqlMap>
